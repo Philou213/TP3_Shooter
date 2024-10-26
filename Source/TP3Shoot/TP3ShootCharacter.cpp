@@ -91,7 +91,8 @@ void ATP3ShootCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 	PlayerInputComponent->BindAction("Aiming", IE_Released, this, &ATP3ShootCharacter::StopAiming);
 
 	// Fire
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ATP3ShootCharacter::Fire);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ATP3ShootCharacter::StartFiring);
+	PlayerInputComponent->BindAction("Fire", IE_Released, this, &ATP3ShootCharacter::StopFiring);
 
 	// Boost Speed
 	PlayerInputComponent->BindAction("BoostSpeed", IE_Pressed, this, &ATP3ShootCharacter::BoostSpeed);
@@ -121,7 +122,7 @@ void ATP3ShootCharacter::StopAiming()
 void ATP3ShootCharacter::Fire()
 {
 	FVector Start, LineTraceEnd, ForwardVector;
-
+	UE_LOG(LogType, Warning, TEXT("Fire"));
 	if (IsAiming)
 	{
 
@@ -130,6 +131,8 @@ void ATP3ShootCharacter::Fire()
 		ForwardVector = FollowCamera->GetForwardVector();
 
 		LineTraceEnd = Start + (ForwardVector * 10000);
+
+		FireParticle(SK_Gun->GetSocketLocation("MuzzleFlash"), LineTraceEnd);
 	}
 	else {
 
@@ -141,9 +144,22 @@ void ATP3ShootCharacter::Fire()
 
 		// Get End Point
 		LineTraceEnd = Start + (ForwardVector * 10000);
+
+		FireParticle(Start, LineTraceEnd);
 	}
+	
 }
 
+void ATP3ShootCharacter::StartFiring()
+{
+	Fire();
+	GetWorldTimerManager().SetTimer(FireTimer,this,&ATP3ShootCharacter::Fire, FiringRate,true);
+}
+
+void ATP3ShootCharacter::StopFiring()
+{
+	GetWorldTimerManager().ClearTimer(FireTimer);
+}
 
 
 void ATP3ShootCharacter::BoostSpeed()

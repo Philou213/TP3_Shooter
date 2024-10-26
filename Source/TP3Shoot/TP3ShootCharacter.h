@@ -27,6 +27,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Input)
 	float TurnRateGamepad;
 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Input)
+	float FiringRate;
+
 protected:
 
 	// Add a gun skeletal mesh component
@@ -80,6 +84,10 @@ protected:
 	// Firing function
 	void Fire();
 
+	void StartFiring();
+
+	void StopFiring();
+	
 	void BoostSpeed();
 
 	void RemoveSpeedBoost();
@@ -107,5 +115,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Firing")
 	bool IsFiring;
 
+private:
+	FTimerHandle FireTimer;
+	
 };
 
