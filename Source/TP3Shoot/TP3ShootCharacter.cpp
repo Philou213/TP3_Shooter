@@ -10,6 +10,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
+#include "Widgets/Text/STextScroller.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -99,6 +100,7 @@ void ATP3ShootCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 	PlayerInputComponent->BindAction("BoostSpeed", IE_Released, this, &ATP3ShootCharacter::RemoveSpeedBoost);
 }
 
+
 void ATP3ShootCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
 {
 	Jump();
@@ -151,9 +153,12 @@ void ATP3ShootCharacter::Fire()
 	// Perform the line trace
 	if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, LineTraceEnd, ECC_Visibility, CollisionParams))
 	{
+		AActor* HitActor = HitResult.GetActor();
+		FVector ImpactPoint = HitResult.ImpactPoint;
 		// If the trace hit something, log the hit information
-		UE_LOG(LogType, Warning, TEXT("Hit Actor: %s"), *HitResult.GetActor()->GetName());
-		UE_LOG(LogType, Warning, TEXT("Hit Location: %s"), *HitResult.ImpactPoint.ToString());
+		UE_LOG(LogType, Warning, TEXT("Hit Actor: %s"), *HitActor->GetName());
+		UE_LOG(LogType, Warning, TEXT("Hit Location: %s"), *ImpactPoint.ToString());
+		CheckIfFiringApplyForce(HitActor, Start, ImpactPoint);
 
 		// Optionally, you can trigger some effects, like spawning particles at the hit location
 		FireParticle(SK_Gun->GetSocketLocation("MuzzleFlash"), HitResult.ImpactPoint); // Or spawn effects based on the hit
@@ -164,6 +169,23 @@ void ATP3ShootCharacter::Fire()
 		FireParticle(SK_Gun->GetSocketLocation("MuzzleFlash"), LineTraceEnd);
 	}
 	
+}
+
+void ATP3ShootCharacter::CheckIfFiringApplyForce(const AActor* HitActor, const FVector FiringLocation, const FVector HitLocation)
+{
+	if (!HitActor->IsA<APawn>())
+	{
+		UPrimitiveComponent* PhysicsComponent = HitActor->GetComponentByClass<UPrimitiveComponent>();
+		if (PhysicsComponent && PhysicsComponent->IsSimulatingPhysics())
+		{
+			FVector ForceDirection = (HitActor->GetActorLocation() - FiringLocation).GetSafeNormal(); 
+			FVector ForceMagnitude = ForceDirection * FiringForce; 
+			
+			UE_LOG(LogType, Warning, TEXT("Apply force"));
+			PhysicsComponent->AddImpulseAtLocation(ForceMagnitude, HitLocation);
+				
+		}
+	}
 }
 
 void ATP3ShootCharacter::StartFiring()

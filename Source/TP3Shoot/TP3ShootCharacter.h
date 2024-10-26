@@ -28,8 +28,11 @@ public:
 	float TurnRateGamepad;
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Input)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Firing)
 	float FiringRate;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Firing)
+	float FiringForce;
 
 protected:
 
@@ -117,6 +120,7 @@ public:
 
 private:
 	FTimerHandle FireTimer;
+	void CheckIfFiringApplyForce(const AActor* otherActor, const FVector firingLocation, const FVector hitLocation);
 	
 };
 
