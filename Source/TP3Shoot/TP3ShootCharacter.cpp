@@ -122,7 +122,6 @@ void ATP3ShootCharacter::StopAiming()
 void ATP3ShootCharacter::Fire()
 {
 	FVector Start, LineTraceEnd, ForwardVector;
-	UE_LOG(LogType, Warning, TEXT("Fire"));
 	if (IsAiming)
 	{
 
@@ -131,8 +130,6 @@ void ATP3ShootCharacter::Fire()
 		ForwardVector = FollowCamera->GetForwardVector();
 
 		LineTraceEnd = Start + (ForwardVector * 10000);
-
-		FireParticle(SK_Gun->GetSocketLocation("MuzzleFlash"), LineTraceEnd);
 	}
 	else {
 
@@ -144,8 +141,27 @@ void ATP3ShootCharacter::Fire()
 
 		// Get End Point
 		LineTraceEnd = Start + (ForwardVector * 10000);
+	}
 
-		FireParticle(Start, LineTraceEnd);
+	// Raycast (line trace)
+	FHitResult HitResult; // Structure to hold hit result information
+	FCollisionQueryParams CollisionParams;
+	CollisionParams.AddIgnoredActor(this); // Ignore self
+
+	// Perform the line trace
+	if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, LineTraceEnd, ECC_Visibility, CollisionParams))
+	{
+		// If the trace hit something, log the hit information
+		UE_LOG(LogType, Warning, TEXT("Hit Actor: %s"), *HitResult.GetActor()->GetName());
+		UE_LOG(LogType, Warning, TEXT("Hit Location: %s"), *HitResult.ImpactPoint.ToString());
+
+		// Optionally, you can trigger some effects, like spawning particles at the hit location
+		FireParticle(SK_Gun->GetSocketLocation("MuzzleFlash"), HitResult.ImpactPoint); // Or spawn effects based on the hit
+	}
+	else
+	{
+		// If nothing was hit, you can fire your particle effect at the end of the line trace
+		FireParticle(SK_Gun->GetSocketLocation("MuzzleFlash"), LineTraceEnd);
 	}
 	
 }
@@ -202,6 +218,7 @@ void ATP3ShootCharacter::FireParticle(FVector Start, FVector Impact)
 
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParticleImpact, ParticleT, true);
 
+	
 }
 
 void ATP3ShootCharacter::TurnAtRate(float Rate)
