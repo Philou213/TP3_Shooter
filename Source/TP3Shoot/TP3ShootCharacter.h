@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ProjectilePool.h"
 #include "GameFramework/Character.h"
 #include "TP3ShootCharacter.generated.h"
 
@@ -33,6 +34,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Firing)
 	float FiringForce;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Firing)
+	AProjectilePool* BeamPool;
 
 protected:
 

@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "TP3ShootCharacter.h"
+
+#include "ProjectileBeam.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -156,18 +158,20 @@ void ATP3ShootCharacter::Fire()
 		AActor* HitActor = HitResult.GetActor();
 		FVector ImpactPoint = HitResult.ImpactPoint;
 		// If the trace hit something, log the hit information
-		UE_LOG(LogType, Warning, TEXT("Hit Actor: %s"), *HitActor->GetName());
-		UE_LOG(LogType, Warning, TEXT("Hit Location: %s"), *ImpactPoint.ToString());
+		//UE_LOG(LogType, Warning, TEXT("Hit Actor: %s"), *HitActor->GetName());
+		//UE_LOG(LogType, Warning, TEXT("Hit Location: %s"), *ImpactPoint.ToString());
 		CheckIfFiringApplyForce(HitActor, Start, ImpactPoint);
 
 		// Optionally, you can trigger some effects, like spawning particles at the hit location
-		FireParticle(SK_Gun->GetSocketLocation("MuzzleFlash"), HitResult.ImpactPoint); // Or spawn effects based on the hit
+		FireParticle(SK_Gun->GetSocketLocation("MuzzleFlash"), ForwardVector); // Or spawn effects based on the hit
 	}
 	else
 	{
 		// If nothing was hit, you can fire your particle effect at the end of the line trace
-		FireParticle(SK_Gun->GetSocketLocation("MuzzleFlash"), LineTraceEnd);
+		FireParticle(SK_Gun->GetSocketLocation("MuzzleFlash"), ForwardVector);
 	}
+	
+	//DrawDebugLine(GetWorld(), SK_Gun->GetSocketLocation("MuzzleFlash"), LineTraceEnd, FColor::Red, false, 0.2f, 0, 0.7f);
 	
 }
 
@@ -181,7 +185,7 @@ void ATP3ShootCharacter::CheckIfFiringApplyForce(const AActor* HitActor, const F
 			FVector ForceDirection = (HitActor->GetActorLocation() - FiringLocation).GetSafeNormal(); 
 			FVector ForceMagnitude = ForceDirection * FiringForce; 
 			
-			UE_LOG(LogType, Warning, TEXT("Apply force"));
+			//UE_LOG(LogType, Warning, TEXT("Apply force"));
 			PhysicsComponent->AddImpulseAtLocation(ForceMagnitude, HitLocation);
 				
 		}
@@ -229,18 +233,27 @@ void ATP3ShootCharacter::FireParticle(FVector Start, FVector Impact)
 
 	FTransform ParticleT;
 
-	ParticleT.SetLocation(Start);
+	//ParticleT.SetLocation(Start);
 
-	ParticleT.SetScale3D(FVector(0.25, 0.25, 0.25));
+	//ParticleT.SetScale3D(FVector(0.25, 0.25, 0.25));
 
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParticleStart, ParticleT, true);
+	//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParticleStart, ParticleT, true);
 
 	// Spawn particle at impact point
 	ParticleT.SetLocation(Impact);
-
+	
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParticleImpact, ParticleT, true);
 
-	
+	AActor* actor =  BeamPool->GetThrowable();
+	AProjectileBeam* projectileBeam = Cast<AProjectileBeam>(actor);
+
+	if (projectileBeam)
+	{
+		projectileBeam->SetActorLocation(Start);
+		UE::Math::TRotator rotator = Impact.Rotation();
+		projectileBeam->SetActorRotation(rotator);
+		projectileBeam->Activates(Start, Impact);
+	}
 }
 
 void ATP3ShootCharacter::TurnAtRate(float Rate)
