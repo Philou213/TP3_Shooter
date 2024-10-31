@@ -43,8 +43,9 @@ AActor* AProjectilePool::GetThrowable()
 {
     for (AActor* Throwable : ThrowablesPoolArray)
     {
-        if (Throwable && !Throwable->GetActorEnableCollision())
+        if (Throwable && Throwable->IsHidden())
         {
+            UE_LOG(LogTemp, Warning, TEXT("Throwable is not set in the pool"));
             return Throwable;
         }
     }

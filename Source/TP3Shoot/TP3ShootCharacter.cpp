@@ -163,12 +163,12 @@ void ATP3ShootCharacter::Fire()
 		CheckIfFiringApplyForce(HitActor, Start, ImpactPoint);
 
 		// Optionally, you can trigger some effects, like spawning particles at the hit location
-		FireParticle(SK_Gun->GetSocketLocation("MuzzleFlash"), ForwardVector); // Or spawn effects based on the hit
+		FireParticle(SK_Gun->GetSocketLocation("MuzzleFlash"), ImpactPoint); // Or spawn effects based on the hit
 	}
 	else
 	{
 		// If nothing was hit, you can fire your particle effect at the end of the line trace
-		FireParticle(SK_Gun->GetSocketLocation("MuzzleFlash"), ForwardVector);
+		FireParticle(SK_Gun->GetSocketLocation("MuzzleFlash"), LineTraceEnd);
 	}
 	
 	//DrawDebugLine(GetWorld(), SK_Gun->GetSocketLocation("MuzzleFlash"), LineTraceEnd, FColor::Red, false, 0.2f, 0, 0.7f);
@@ -231,7 +231,7 @@ void ATP3ShootCharacter::FireParticle(FVector Start, FVector Impact)
 {
 	if (!ParticleStart || !ParticleImpact) return;
 
-	FTransform ParticleT;
+	//FTransform ParticleT;
 
 	//ParticleT.SetLocation(Start);
 
@@ -240,19 +240,19 @@ void ATP3ShootCharacter::FireParticle(FVector Start, FVector Impact)
 	//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParticleStart, ParticleT, true);
 
 	// Spawn particle at impact point
-	ParticleT.SetLocation(Impact);
+	//ParticleT.SetLocation(Impact);
 	
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParticleImpact, ParticleT, true);
+	//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParticleImpact, ParticleT, true);
 
 	AActor* actor =  BeamPool->GetThrowable();
-	AProjectileBeam* projectileBeam = Cast<AProjectileBeam>(actor);
 
-	if (projectileBeam)
+	if (AProjectileBeam* projectileBeam = Cast<AProjectileBeam>(actor))
 	{
 		projectileBeam->SetActorLocation(Start);
-		UE::Math::TRotator rotator = Impact.Rotation();
-		projectileBeam->SetActorRotation(rotator);
-		projectileBeam->Activates(Start, Impact);
+		const float Distance = FVector::Dist(Start, Impact);
+		const FRotator Rotator = (Impact - Start).Rotation();
+		projectileBeam->SetActorRotation(Rotator);
+		projectileBeam->Activates(Distance);
 	}
 }
 
