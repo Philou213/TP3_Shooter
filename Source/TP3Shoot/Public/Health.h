@@ -1,0 +1,45 @@
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Components/ActorComponent.h"
+#include "Health.generated.h"
+
+
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+class TP3SHOOT_API UHealth : public UActorComponent
+{
+	GENERATED_BODY()
+
+public:	
+	// Sets default values for this component's properties
+	UHealth();
+
+	UPROPERTY(EditAnywhere, Category="Health")
+	float MaxHealth;
+
+	UPROPERTY(EditAnywhere, Category="StartHealthRegeneration")
+	float HealthRegenerationStartCooldown;
+
+	UPROPERTY(EditAnywhere, Category="HealthRegeneration")
+	float HealthRegenerationRate;
+
+	UPROPERTY(EditAnywhere, Category="HealthRegeneration")
+	float HealthRegenerationRateCooldown;
+
+	void AddHealth(float Health);
+	void StartHealthRegenerationCooldown();
+	void HealthRegeneration();
+
+protected:
+	// Called when the game starts
+	virtual void BeginPlay() override;
+
+
+private:
+	float CurrentHealth;
+	FTimerHandle HealthRegenerationStartTimer;
+	FTimerHandle HealthRegenerationRateTimer;
+	
+
+		
+};

@@ -2,6 +2,7 @@
 
 #include "TP3ShootCharacter.h"
 
+#include "Health.h"
 #include "ProjectileBeam.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -59,6 +60,9 @@ ATP3ShootCharacter::ATP3ShootCharacter()
 	SK_Gun->SetupAttachment(GetMesh());
 	// Set parent socket
 	SK_Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("GripPoint"));
+
+	//Create health component
+	Health = CreateDefaultSubobject<UHealth>(TEXT("Health"));
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
@@ -194,6 +198,7 @@ void ATP3ShootCharacter::CheckIfFiringApplyForce(const AActor* HitActor, const F
 
 void ATP3ShootCharacter::StartFiring()
 {
+	Health->AddHealth(-80);
 	Fire();
 	GetWorldTimerManager().SetTimer(FireTimer,this,&ATP3ShootCharacter::Fire, FiringRate,true);
 }
