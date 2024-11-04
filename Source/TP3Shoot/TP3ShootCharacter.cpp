@@ -2,6 +2,7 @@
 
 #include "TP3ShootCharacter.h"
 
+#include "Dead.h"
 #include "Health.h"
 #include "ProjectileBeam.h"
 #include "Camera/CameraComponent.h"
@@ -63,6 +64,7 @@ ATP3ShootCharacter::ATP3ShootCharacter()
 
 	//Create health component
 	Health = CreateDefaultSubobject<UHealth>(TEXT("Health"));
+	Dead = CreateDefaultSubobject<UDead>(TEXT("Dead"));
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)

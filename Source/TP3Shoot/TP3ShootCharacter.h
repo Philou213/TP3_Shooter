@@ -23,6 +23,9 @@ class ATP3ShootCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Health, meta = (AllowPrivateAccess = "true"))
 	class UHealth* Health;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Health, meta = (AllowPrivateAccess = "true"))
+	class UDead* Dead;
+
 
 public:
 	ATP3ShootCharacter();
