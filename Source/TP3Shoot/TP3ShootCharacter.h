@@ -42,6 +42,9 @@ public:
 	float FiringForce;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Firing)
+	float FiringDamage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Firing)
 	AProjectilePool* BeamPool;
 
 protected:
@@ -131,6 +134,7 @@ public:
 private:
 	FTimerHandle FireTimer;
 	void CheckIfFiringApplyForce(const AActor* otherActor, const FVector firingLocation, const FVector hitLocation);
-	
+	void CheckIfCharacter(const AActor* HitActor);
+	void NotifyHitByRaycast(float firingDamage) const;
 };
 

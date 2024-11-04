@@ -167,6 +167,7 @@ void ATP3ShootCharacter::Fire()
 		//UE_LOG(LogType, Warning, TEXT("Hit Actor: %s"), *HitActor->GetName());
 		//UE_LOG(LogType, Warning, TEXT("Hit Location: %s"), *ImpactPoint.ToString());
 		CheckIfFiringApplyForce(HitActor, Start, ImpactPoint);
+		CheckIfCharacter(HitActor);
 
 		// Optionally, you can trigger some effects, like spawning particles at the hit location
 		FireParticle(SK_Gun->GetSocketLocation("MuzzleFlash"), ImpactPoint); // Or spawn effects based on the hit
@@ -198,9 +199,24 @@ void ATP3ShootCharacter::CheckIfFiringApplyForce(const AActor* HitActor, const F
 	}
 }
 
+void ATP3ShootCharacter::CheckIfCharacter(const AActor* HitActor)
+{
+	const ATP3ShootCharacter* character = Cast<ATP3ShootCharacter>(HitActor);
+
+	if (character)
+	{
+		character->NotifyHitByRaycast(FiringDamage);
+	}
+}
+
+void ATP3ShootCharacter::NotifyHitByRaycast(float firingDamage) const
+{
+	Health->AddHealth(-firingDamage);
+}
+
+
 void ATP3ShootCharacter::StartFiring()
 {
-	Health->AddHealth(-80);
 	Fire();
 	GetWorldTimerManager().SetTimer(FireTimer,this,&ATP3ShootCharacter::Fire, FiringRate,true);
 }
