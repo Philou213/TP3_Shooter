@@ -4,6 +4,7 @@
 #include "Components/ActorComponent.h"
 #include "Health.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthValueChanged, float, newHealth);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TP3SHOOT_API UHealth : public UActorComponent
@@ -25,6 +26,9 @@ public:
 
 	UPROPERTY(EditAnywhere, Category="HealthRegeneration")
 	float HealthRegenerationRateCooldown;
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnHealthValueChanged OnHealthValueChanged;
 
 	void AddHealth(float Health);
 	void StartHealthRegenerationCooldown();

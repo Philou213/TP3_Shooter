@@ -30,7 +30,7 @@ void UHealth::AddHealth(float AddHealth)
 		//TODO Dead
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Current health: %f"), CurrentHealth);
-
+	OnHealthValueChanged.Broadcast(CurrentHealth);
 	if (AddHealth < 0) StartHealthRegenerationCooldown();
 }
 
