@@ -5,6 +5,7 @@
 #include "Dead.h"
 #include "Health.h"
 #include "ProjectileBeam.h"
+#include "Team.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -65,6 +66,7 @@ ATP3ShootCharacter::ATP3ShootCharacter()
 	//Create health component
 	Health = CreateDefaultSubobject<UHealth>(TEXT("Health"));
 	Dead = CreateDefaultSubobject<UDead>(TEXT("Dead"));
+	Team = CreateDefaultSubobject<UTeam>(TEXT("Team"));
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
@@ -203,7 +205,7 @@ void ATP3ShootCharacter::CheckIfCharacter(const AActor* HitActor)
 {
 	const ATP3ShootCharacter* character = Cast<ATP3ShootCharacter>(HitActor);
 
-	if (character)
+	if (character && !Team->IsSameTeam(character->Team->teamId))
 	{
 		character->NotifyHitByRaycast(FiringDamage);
 	}

@@ -45,7 +45,6 @@ AActor* AProjectilePool::GetThrowable()
     {
         if (Throwable && Throwable->IsHidden())
         {
-            UE_LOG(LogTemp, Warning, TEXT("Throwable is not set in the pool"));
             return Throwable;
         }
     }
