@@ -23,7 +23,7 @@ public:
 	UPROPERTY(EditAnywhere, category="Respawn")
 	ARespawn* Respawn;
 
-	UPROPERTY(EditAnywhere, category="Respawn")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, category="Respawn")
 	float RespawnCooldown;
 
 protected:
@@ -31,7 +31,9 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
+	UFUNCTION()
 	void DeactivateCharacter();
+	
 	void ReactivateCharacter();
 	FTimerHandle RespawnTimer;
 };

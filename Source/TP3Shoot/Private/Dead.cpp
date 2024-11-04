@@ -3,7 +3,10 @@
 
 #include "Dead.h"
 
+#include "Health.h"
 #include "Respawn.h"
+#include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values for this component's properties
 UDead::UDead()
@@ -21,8 +24,12 @@ void UDead::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+	UHealth* Health = GetOwner()->FindComponentByClass<UHealth>();
+	if (Health)
+	{
+		// Step 2: Bind to an event on HealthComponent
+		Health->OnDead.AddDynamic(this, &UDead::DeactivateCharacter);
+	}
 }
 
 void UDead::DeactivateCharacter()
@@ -30,6 +37,16 @@ void UDead::DeactivateCharacter()
 	AActor* OwnerActor = GetOwner();
 	if (OwnerActor)
 	{
+		ACharacter* Character = Cast<ACharacter>(OwnerActor);
+
+		if (Character)
+		{
+			UCharacterMovementComponent* MovementComponent = Character->GetCharacterMovement();
+			if (MovementComponent)
+			{
+				MovementComponent->SetMovementMode(MOVE_None);
+			}
+		}
 		OwnerActor->SetActorEnableCollision(false);
 		OwnerActor->SetActorHiddenInGame(true);
 		OwnerActor->SetActorTickEnabled(false);
@@ -42,6 +59,16 @@ void UDead::ReactivateCharacter()
 	AActor* OwnerActor = GetOwner();
 	if (OwnerActor)
 	{
+		ACharacter* Character = Cast<ACharacter>(OwnerActor);
+
+		if (Character)
+		{
+			UCharacterMovementComponent* MovementComponent = Character->GetCharacterMovement();
+			if (MovementComponent)
+			{
+				MovementComponent->SetMovementMode(MOVE_Walking);
+			}
+		}
 		OwnerActor->SetActorLocationAndRotation(Respawn->GetActorLocation(), Respawn->GetActorRotation());
 		
 		OwnerActor->SetActorEnableCollision(true);

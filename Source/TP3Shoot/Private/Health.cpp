@@ -26,7 +26,7 @@ void UHealth::AddHealth(float AddHealth)
 	}
 	if (CurrentHealth < 0)
 	{
-		CurrentHealth = 0;
+		CurrentHealth = MaxHealth;
 		OnDead.Broadcast();
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Current health: %f"), CurrentHealth);
