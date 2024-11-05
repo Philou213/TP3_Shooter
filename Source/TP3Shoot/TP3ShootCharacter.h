@@ -107,6 +107,7 @@ protected:
 
 	// Firing function
 	void Fire();
+	FVector GetCameraRaycastHitLocation();
 
 	void StartFiring();
 

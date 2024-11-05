@@ -133,27 +133,12 @@ void ATP3ShootCharacter::StopAiming()
 
 void ATP3ShootCharacter::Fire()
 {
-	FVector Start, LineTraceEnd, ForwardVector;
-	if (IsAiming)
-	{
+	FVector Start, LineTraceEnd;
 
-		Start = FollowCamera->GetComponentLocation();
+	Start = SK_Gun->GetSocketLocation("MuzzleFlash");
 
-		ForwardVector = FollowCamera->GetForwardVector();
-
-		LineTraceEnd = Start + (ForwardVector * 10000);
-	}
-	else {
-
-		// Get muzzle location
-		Start = SK_Gun->GetSocketLocation("MuzzleFlash");
-
-		// Get Rotation Forward Vector
-		ForwardVector = FollowCamera->GetForwardVector();
-
-		// Get End Point
-		LineTraceEnd = Start + (ForwardVector * 10000);
-	}
+	LineTraceEnd = GetCameraRaycastHitLocation();
+	if (LineTraceEnd == FVector::ZeroVector) LineTraceEnd = Start + FollowCamera->GetForwardVector() * 10000;
 
 	// Raycast (line trace)
 	FHitResult HitResult; // Structure to hold hit result information
@@ -165,9 +150,11 @@ void ATP3ShootCharacter::Fire()
 	{
 		AActor* HitActor = HitResult.GetActor();
 		FVector ImpactPoint = HitResult.ImpactPoint;
+		
 		// If the trace hit something, log the hit information
 		//UE_LOG(LogType, Warning, TEXT("Hit Actor: %s"), *HitActor->GetName());
 		//UE_LOG(LogType, Warning, TEXT("Hit Location: %s"), *ImpactPoint.ToString());
+		
 		CheckIfFiringApplyForce(HitActor, Start, ImpactPoint);
 		CheckIfCharacter(HitActor);
 
@@ -183,6 +170,27 @@ void ATP3ShootCharacter::Fire()
 	//DrawDebugLine(GetWorld(), SK_Gun->GetSocketLocation("MuzzleFlash"), LineTraceEnd, FColor::Red, false, 0.2f, 0, 0.7f);
 	
 }
+
+FVector ATP3ShootCharacter::GetCameraRaycastHitLocation()
+{
+	FVector Start = FollowCamera->GetComponentLocation();
+	FVector ForwardVector = FollowCamera->GetForwardVector();
+	FVector LineTraceEnd = Start + (ForwardVector * 10000);
+
+	FHitResult HitResult;
+	FCollisionQueryParams CollisionParams;
+	CollisionParams.AddIgnoredActor(this); // Ignore self
+
+	// Perform the line trace
+	if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, LineTraceEnd, ECC_Visibility, CollisionParams))
+	{
+		return HitResult.ImpactPoint; // Return the location of the hit
+	}
+
+	// If no hit, return zero vector
+	return FVector::ZeroVector;
+}
+
 
 void ATP3ShootCharacter::CheckIfFiringApplyForce(const AActor* HitActor, const FVector FiringLocation, const FVector HitLocation)
 {
