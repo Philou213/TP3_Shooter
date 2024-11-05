@@ -20,7 +20,7 @@ void AAIControllerBase::OnPossess(APawn* InPawn)
 	Super::OnPossess(InPawn);
 
 	ATP3ShootCharacter* Shooter = Cast<ATP3ShootCharacter>(UGameplayStatics::GetActorOfClass(GetWorld(), ATP3ShootCharacter::StaticClass()));
-	AAICharacter* AI = Cast<AAICharacter>(InPawn);
+	ATP3ShootCharacter* AI = Cast<ATP3ShootCharacter>(InPawn);
 	if (AI && AI->TreeAsset->BlackboardAsset)
 	{
 		UBlackboardComponent* BlackboardComponent;
