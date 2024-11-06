@@ -141,6 +141,9 @@ void ATP3ShootCharacter::Fire()
 		return;
 	}
 
+	//No shoot if not visible
+	if (IsHidden()) return;
+
 	Start = SK_Gun->GetSocketLocation("MuzzleFlash");
 
 	LineTraceEnd = GetCameraRaycastHitLocation();

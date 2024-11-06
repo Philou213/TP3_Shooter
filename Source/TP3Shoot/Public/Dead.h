@@ -20,8 +20,6 @@ public:
 	// Sets default values for this component's properties
 	UDead();
 	
-	UPROPERTY(EditAnywhere, category="Respawn")
-	ARespawn* Respawn;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, category="Respawn")
 	float RespawnCooldown;
@@ -36,4 +34,5 @@ private:
 	
 	void ReactivateCharacter();
 	FTimerHandle RespawnTimer;
+	ARespawn* Respawn;
 };

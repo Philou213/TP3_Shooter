@@ -5,8 +5,10 @@
 
 #include "Health.h"
 #include "Respawn.h"
+#include "Team.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values for this component's properties
 UDead::UDead()
@@ -27,8 +29,20 @@ void UDead::BeginPlay()
 	UHealth* Health = GetOwner()->FindComponentByClass<UHealth>();
 	if (Health)
 	{
-		// Step 2: Bind to an event on HealthComponent
 		Health->OnDead.AddDynamic(this, &UDead::DeactivateCharacter);
+	}
+
+	TArray<AActor*> FoundRespawns;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ARespawn::StaticClass(), FoundRespawns);
+
+	for (AActor* FoundRespawnActor : FoundRespawns)
+	{	
+		ARespawn* FoundRespawn = Cast<ARespawn>(FoundRespawnActor);
+		UTeam* RespawnTeam = FoundRespawn->GetComponentByClass<UTeam>();
+
+		UTeam* CharacterTeam = GetOwner()->FindComponentByClass<UTeam>();
+
+		if (CharacterTeam->IsSameTeam(RespawnTeam->teamId)) Respawn = FoundRespawn;
 	}
 }
 
@@ -69,7 +83,9 @@ void UDead::ReactivateCharacter()
 				MovementComponent->SetMovementMode(MOVE_Walking);
 			}
 		}
-		OwnerActor->SetActorLocationAndRotation(Respawn->GetActorLocation(), Respawn->GetActorRotation());
+
+		if (Respawn == nullptr) OwnerActor->SetActorLocationAndRotation(FVector(1490,2010,350), FRotator::ZeroRotator);
+		else OwnerActor->SetActorLocationAndRotation(Respawn->GetActorLocation(), Respawn->GetActorRotation());
 		
 		OwnerActor->SetActorEnableCollision(true);
 		OwnerActor->SetActorHiddenInGame(false);
