@@ -143,6 +143,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Firing")
 	bool IsFiring;
 
+	void BeginPlay() override;
+
 private:
 	FTimerHandle FireTimer;
 	void CheckIfFiringApplyForce(const AActor* otherActor, const FVector firingLocation, const FVector hitLocation);

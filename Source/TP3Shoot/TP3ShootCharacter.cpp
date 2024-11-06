@@ -204,6 +204,13 @@ FVector ATP3ShootCharacter::GetCameraRaycastHitLocation()
 }
 
 
+void ATP3ShootCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	BeamPool = Cast<AProjectilePool>(UGameplayStatics::GetActorOfClass(GetWorld(), AProjectilePool::StaticClass()));
+}
+
 void ATP3ShootCharacter::CheckIfFiringApplyForce(const AActor* HitActor, const FVector FiringLocation, const FVector HitLocation)
 {
 	if (!HitActor->IsA<APawn>())
