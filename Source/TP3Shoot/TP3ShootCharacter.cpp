@@ -135,6 +135,12 @@ void ATP3ShootCharacter::Fire()
 {
 	FVector Start, LineTraceEnd;
 
+	if (!SK_Gun || !FollowCamera)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Missing SK_Gun or FollowCamera component in Fire()"));
+		return;
+	}
+
 	Start = SK_Gun->GetSocketLocation("MuzzleFlash");
 
 	LineTraceEnd = GetCameraRaycastHitLocation();
@@ -173,6 +179,12 @@ void ATP3ShootCharacter::Fire()
 
 FVector ATP3ShootCharacter::GetCameraRaycastHitLocation()
 {
+	if (!FollowCamera)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Missing FollowCamera component in GetCameraRaycastHitLocation()"));
+		return FVector::ZeroVector;
+	}
+
 	FVector Start = FollowCamera->GetComponentLocation();
 	FVector ForwardVector = FollowCamera->GetForwardVector();
 	FVector LineTraceEnd = Start + (ForwardVector * 10000);
@@ -262,7 +274,11 @@ void ATP3ShootCharacter::RemoveSpeedBoost()
 
 void ATP3ShootCharacter::FireParticle(FVector Start, FVector Impact)
 {
-	if (!ParticleStart || !ParticleImpact) return;
+	if (!ParticleStart || !ParticleImpact || !BeamPool)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Missing ParticleStart, ParticleImpact, or BeamPool in FireParticle()"));
+		return;
+	}
 
 	//FTransform ParticleT;
 

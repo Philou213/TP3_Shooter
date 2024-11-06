@@ -105,9 +105,6 @@ protected:
 
 	void StopAiming();
 
-	// Firing function
-	UFUNCTION(BlueprintCallable)
-	void Fire();
 	FVector GetCameraRaycastHitLocation();
 
 	void StartFiring();
@@ -119,6 +116,11 @@ protected:
 	void RemoveSpeedBoost();
 
 	void FireParticle(FVector Start, FVector Impact);
+
+public:
+	// Firing function
+	UFUNCTION(BlueprintCallable)
+	void Fire();
 
 protected:
 	// APawn interface
