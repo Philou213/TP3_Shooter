@@ -106,6 +106,7 @@ protected:
 	void StopAiming();
 
 	// Firing function
+	UFUNCTION(BlueprintCallable)
 	void Fire();
 
 	void StartFiring();
