@@ -24,7 +24,7 @@ void UHealth::AddHealth(float AddHealth)
 		//Stop regeneration
 		GetWorld()->GetTimerManager().ClearTimer(HealthRegenerationRateTimer);
 	}
-	if (CurrentHealth < 0)
+	if (CurrentHealth <= 0)
 	{
 		CurrentHealth = MaxHealth;
 		OnDead.Broadcast();

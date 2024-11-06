@@ -108,6 +108,7 @@ protected:
 	// Firing function
 	UFUNCTION(BlueprintCallable)
 	void Fire();
+	FVector GetCameraRaycastHitLocation();
 
 	void StartFiring();
 
