@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "Perception/AIPerceptionTypes.h"
 #include "AIControllerBase.generated.h"
 
 /**
@@ -20,6 +21,20 @@ public:
 
     virtual void OnPossess(APawn* InPawn) override;
 
+    void OnTargetPerceptionUpdated(AActor* Actor, const FAIStimulus& Stimulus) const;
+
     UPROPERTY(Transient)
     class UBehaviorTreeComponent* BehaviorTreeComponent;
+
+    UPROPERTY(Transient)
+    class UBlackboardComponent* BlackboardComponent;
+
+    // Perception component
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+    class UAIPerceptionComponent* AIPerceptionComponent;
+
+    // Sight sense config
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+    class UAISenseConfig_Sight* SightConfig;
+
 };

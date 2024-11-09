@@ -21,6 +21,6 @@ public:
 
 	bool IsSameTeam(int otherTeamId);
 
-
+	int GetTeamId();
 		
 };

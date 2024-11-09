@@ -18,5 +18,10 @@ bool UTeam::IsSameTeam(int otherTeamId)
 	return teamId == otherTeamId;
 }
 
+int UTeam::GetTeamId()
+{
+	return teamId;
+}
+
 
 
