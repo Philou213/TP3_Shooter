@@ -21,8 +21,6 @@ public:
 
     virtual void OnPossess(APawn* InPawn) override;
 
-    //void OnTargetPerceptionUpdated(AActor* Actor, const FAIStimulus& Stimulus) const;
-
     UPROPERTY(Transient)
     class UBehaviorTreeComponent* BehaviorTreeComponent;
 
