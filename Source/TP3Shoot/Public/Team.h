@@ -19,8 +19,10 @@ public:
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess=true))
 	int teamId;
 
+	UFUNCTION(BlueprintCallable, Category = "Team")
 	bool IsSameTeam(int otherTeamId);
 
+	UFUNCTION(BlueprintCallable, Category = "Team")
 	int GetTeamId();
 		
 };
