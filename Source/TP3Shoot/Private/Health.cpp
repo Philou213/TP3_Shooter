@@ -48,6 +48,11 @@ void UHealth::HealthRegeneration()
 	AddHealth(HealthRegenerationRate);
 }
 
+float UHealth::GetHealthPourcent()
+{
+	return CurrentHealth * 100 / MaxHealth;
+}
+
 // Called when the game starts
 void UHealth::BeginPlay()
 {

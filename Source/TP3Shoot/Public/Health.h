@@ -38,6 +38,9 @@ public:
 	void StartHealthRegenerationCooldown();
 	void HealthRegeneration();
 
+	UFUNCTION(BlueprintCallable)
+	float GetHealthPourcent();
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
