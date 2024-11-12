@@ -5,7 +5,7 @@
 UBTTask_Fire::UBTTask_Fire()
 {
     NodeName = "Fire Weapon";
-    CooldownTime = 0.2f;  // Set your desired cooldown time (in seconds)
+    CooldownTime = 0.05f;  // Set your desired cooldown time (in seconds)
     LastFireTime = -CooldownTime;  // Ensure it can fire immediately at the start
 }
 
@@ -24,7 +24,7 @@ EBTNodeResult::Type UBTTask_Fire::ExecuteTask(UBehaviorTreeComponent& OwnerComp,
     if (CurrentTime - LastFireTime > CooldownTime)
     {
         // Call the Fire function
-        Character->Fire();
+        Character->FireStraight();
 
         // Update the last fire time
         LastFireTime = CurrentTime;

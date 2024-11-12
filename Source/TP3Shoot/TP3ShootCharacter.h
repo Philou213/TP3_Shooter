@@ -122,6 +122,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Fire();
 
+	void FireStraight();
+
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

@@ -187,6 +187,56 @@ void ATP3ShootCharacter::Fire()
 	
 }
 
+void ATP3ShootCharacter::FireStraight()
+{
+	FVector Start, LineTraceEnd;
+
+	if (!SK_Gun)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Missing SK_Gun component in FireStraight()"));
+		return;
+	}
+
+	// No shoot if not visible
+	if (IsHidden()) return;
+
+	// Get the muzzle location
+	Start = SK_Gun->GetSocketLocation("MuzzleFlash");
+
+	// Get the forward vector of the actor that owns the SK_Gun component (this is typically the character)
+	FVector ForwardVector = GetActorForwardVector();  // Get the forward vector of the actor
+	LineTraceEnd = Start + ForwardVector * 10000;  // Adjust the range as needed
+
+	// Raycast (line trace)
+	FHitResult HitResult;
+	FCollisionQueryParams CollisionParams;
+	CollisionParams.AddIgnoredActor(this); // Ignore self
+
+	// Perform the line trace
+	if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, LineTraceEnd, ECC_Visibility, CollisionParams))
+	{
+		AActor* HitActor = HitResult.GetActor();
+		FVector ImpactPoint = HitResult.ImpactPoint;
+
+		// Check if the hit actor is valid and apply force or other logic
+		CheckIfFiringApplyForce(HitActor, Start, ImpactPoint);
+		CheckIfCharacter(HitActor);
+
+		// Optionally, trigger effects at the hit location
+		FireParticle(SK_Gun->GetSocketLocation("MuzzleFlash"), ImpactPoint);
+	}
+	else
+	{
+		// If nothing was hit, fire the particle effect at the end of the trace
+		FireParticle(SK_Gun->GetSocketLocation("MuzzleFlash"), LineTraceEnd);
+	}
+
+	// Optionally, you can draw a debug line to visualize the shot
+	//DrawDebugLine(GetWorld(), Start, LineTraceEnd, FColor::Red, false, 0.2f, 0, 0.7f);
+}
+
+
+
 FVector ATP3ShootCharacter::GetCameraRaycastHitLocation()
 {
 	if (!FollowCamera)
