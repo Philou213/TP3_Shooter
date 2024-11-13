@@ -41,13 +41,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float GetHealthPourcent();
 
+	float CurrentHealth;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 
 private:
-	float CurrentHealth;
 	FTimerHandle HealthRegenerationStartTimer;
 	FTimerHandle HealthRegenerationRateTimer;
 	
