@@ -12,6 +12,8 @@
 #include <Kismet/GameplayStatics.h>
 #include <Team.h>
 
+#include "Health.h"
+
 AAIControllerBase::AAIControllerBase(const FObjectInitializer& ObjectInitializer)
 {
 	// Create BehaviorTree Component
@@ -28,7 +30,6 @@ void AAIControllerBase::OnPossess(APawn* InPawn)
 	{
 		UseBlackboard(AI->TreeAsset->BlackboardAsset, BlackboardComponent);
 		BlackboardComponent->SetValueAsObject("PlayerActor", Shooter);
-
 		BehaviorTreeComponent->StartTree(*AI->TreeAsset);
 	}
 }

@@ -347,18 +347,18 @@ void ATP3ShootCharacter::FireParticle(FVector Start, FVector Impact)
 		return;
 	}
 
-	//FTransform ParticleT;
+	FTransform ParticleT;
 
-	//ParticleT.SetLocation(Start);
+	ParticleT.SetLocation(Start);
 
-	//ParticleT.SetScale3D(FVector(0.25, 0.25, 0.25));
+	ParticleT.SetScale3D(FVector(0.01, 0.01, 0.01));
 
-	//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParticleStart, ParticleT, true);
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParticleStart, ParticleT, true);
 
 	// Spawn particle at impact point
-	//ParticleT.SetLocation(Impact);
+	ParticleT.SetLocation(Impact);
 	
-	//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParticleImpact, ParticleT, true);
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParticleImpact, ParticleT, true);
 
 	AActor* actor =  BeamPool->GetThrowable();
 
