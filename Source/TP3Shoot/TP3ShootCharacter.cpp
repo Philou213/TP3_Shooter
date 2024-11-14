@@ -2,10 +2,12 @@
 
 #include "TP3ShootCharacter.h"
 
+#include "AIControllerBase.h"
 #include "Dead.h"
 #include "Health.h"
 #include "ProjectileBeam.h"
 #include "Team.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
@@ -295,6 +297,22 @@ void ATP3ShootCharacter::CheckIfCharacter(const AActor* HitActor)
 	if (character && !Team->IsSameTeam(character->Team->teamId))
 	{
 		character->NotifyHitByRaycast(FiringDamage);
+
+		// Get the AI Controller and cast it to AAIControllerBase
+		if (AAIControllerBase* AIController = Cast<AAIControllerBase>(character->GetController()))
+		{
+			if (AIController->BlackboardComponent)
+			{
+				UObject* target = AIController->BlackboardComponent->GetValueAsObject("TargetActor");
+
+				if(target == nullptr)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("No target"));
+					
+					AIController->BlackboardComponent->SetValueAsObject("TargetActor", this);
+				}
+			}
+		}
 	}
 }
 

@@ -5,7 +5,7 @@
 UBTTask_Fire::UBTTask_Fire()
 {
     NodeName = "Fire Weapon";
-    CooldownTime = 0.05f;  // Set your desired cooldown time (in seconds)
+    CooldownTime = 0.075f;  // Set your desired cooldown time (in seconds)
     LastFireTime = -CooldownTime;  // Ensure it can fire immediately at the start
 }
 
