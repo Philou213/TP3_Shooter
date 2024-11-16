@@ -24,7 +24,7 @@ class TP3SHOOT_API AProjectileBeam : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AProjectileBeam();
-	void Activates(float distance);
+	void Activates(float distance, int teamId);
 
 
 

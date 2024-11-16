@@ -386,7 +386,7 @@ void ATP3ShootCharacter::FireParticle(FVector Start, FVector Impact)
 		const float Distance = FVector::Dist(Start, Impact);
 		const FRotator Rotator = (Impact - Start).Rotation();
 		projectileBeam->SetActorRotation(Rotator);
-		projectileBeam->Activates(Distance);
+		projectileBeam->Activates(Distance, Team->GetTeamId());
 	}
 }
 

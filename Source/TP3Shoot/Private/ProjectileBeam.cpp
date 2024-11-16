@@ -16,10 +16,13 @@ AProjectileBeam::AProjectileBeam()
 	NiagaraEffect->OnSystemFinished.AddDynamic(this, &AProjectileBeam::HandleSystemFinished);
 }
 
-void AProjectileBeam::Activates(float distance)
+void AProjectileBeam::Activates(float distance, int teamId)
 {
 	NiagaraEffect->SetVectorParameter("BeamEnd", FVector(distance,0,0));
-	NiagaraEffect->SetColorParameter("BeamColor", FColor::Blue);
+	if (teamId == 0)
+		NiagaraEffect->SetColorParameter("BeamColor", FColor::Blue);
+	else
+		NiagaraEffect->SetColorParameter("BeamColor", FColor::Red);
 	NiagaraEffect->Activate();
 	SetActorHiddenInGame(false);
 }
